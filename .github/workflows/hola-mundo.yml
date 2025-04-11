@@ -16,11 +16,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      - name: Setup PHP environment
-        uses: nanasess/setup-php@v4.0.2
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
         with:
           # Version Spec of the version to use.  Examples: 8.1
-          php-version: 7.4
+          php-version: '7.4'
           
       # Runs a single command using the runners shell
       - name: Run a PHP script
