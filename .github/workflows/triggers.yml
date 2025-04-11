@@ -1,0 +1,80 @@
+name: Triggers
+
+run-name: ¡Estoy aprendiendo a usar diferentes Triggers!
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**.php'
+
+  issues:
+    types:
+      - labeled
+
+  workflow_dispatch:
+    inputs:
+      lenguaje_favorito:
+        description: 'Lenguaje favorito'
+        default: Python
+        required: true
+        type: choice
+        options:
+          - Python
+          - JavaScript
+          - PHP
+      nombre:
+        description: 'Tu nombre'
+        required: true
+        default: Jonathan
+        type: string
+
+  schedule:
+    - cron: '15 22 * * *'
+
+jobs:
+  hola-mundo-manual:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Definir nombre
+        run: echo "USERNAME=${{ inputs.nombre }}" >> $GITHUB_ENV
+
+      - name: Definir lenguaje
+        run: echo "LANGUAGE=${{ inputs.lenguaje_favorito }}" >> $GITHUB_ENV
+
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          # Version Spec of the version to use.  Examples: 8.1
+          php-version: '7.4'
+
+      - name: Correr script
+        run: php index.php
+
+  hola-mundo:
+    if: ${{ github.event_name != 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Definir nombre
+        run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          # Version Spec of the version to use.  Examples: 8.1
+          php-version: '7.4'
+
+      - name: Correr script
+        run: php index.php
+          
